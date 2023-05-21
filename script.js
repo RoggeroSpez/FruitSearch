@@ -7,26 +7,30 @@ let selectedSuggestionIndex = -1;
 let totalSuggestions = 0;
 
 function search(str) {
-	let results = [];
-if (str.length > 0){
-results = fruit.filter(item => item.toLowerCase().includes(str.toLowerCase()));
-}
-	return results;
+  let results = [];
+
+  if (str.length > 0) {
+    results = fruit.filter(item => item.toLowerCase().includes(str.toLowerCase()));
+  }
+
+  return results;
 }
 
 function searchHandler(e) {
-const inputVal = e.target.value;
-const results = search(inputVal);
-showSuggestions(results, inputVal);
+  const inputVal = e.target.value;
+  const results = search(inputVal);
+  showSuggestions(results, inputVal);
 }
 
 function showSuggestions(results, inputVal) {
-const fruitList = results.map((list, index)=>{return "<li index = '${index}'>@{list}</li>";})
-.join ('');
-suggestions,innerHTML = "<ul>" + fruitList + "</ul>";
-suggestions.style.display = "block";
+  const fruitList = results.map((list, index) => {
+    return `<li index="${index}">${list}</li>`;
+  }).join('');
 
-totalSuggestions = results.length;
+  suggestions.innerHTML = "<ul>" + fruitList + "</ul>";
+  suggestions.style.display = 'block';
+
+  totalSuggestions = results.length;
 }
 
 function useSuggestion(e) {
@@ -65,11 +69,25 @@ function useSuggestion(e) {
     }
   }
 }
-input.addEventListener('keyup', function(e) {
-	if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') {
-	  useSuggestion(e);
-	} else {
-	  searchHandler(e);
-	}
+
+function highlightSuggestion() {
+  const suggestionsList = suggestions.querySelectorAll('li');
+
+  suggestionsList.forEach((item, index) => {
+    if (index === selectedSuggestionIndex) {
+      item.classList.add('selected');
+    } else {
+      item.classList.remove('selected');
+    }
   });
+}
+
+input.addEventListener('keyup', function(e) {
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'Enter') {
+    useSuggestion(e);
+  } else {
+    searchHandler(e);
+  }
+});
+
 suggestions.addEventListener('click', useSuggestion);
